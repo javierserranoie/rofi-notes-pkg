@@ -1,0 +1,23 @@
+#!/bin/bash
+set -ex
+
+NOTES_FOLDER="/home/$USER/Documents/notes"
+
+selected=$(ls $NOTES_FOLDER | rofi -dmenu -p "note's name")
+if [ ! -z "$selected" ]
+then
+	if [ -f "$NOTES_FOLDER/$selected" ]
+	then
+		xfce4-terminal -e "nvim $NOTES_FOLDER/$selected"
+	else
+		old_filename="$(date +%Y-%m-%d-%H-%M-%S)_$selected.md"
+		touch "$NOTES_FOLDER/$old_filename"
+		new_filename=$(detox -v -s lower "$NOTES_FOLDER/$old_filename"|grep ">"|awk 'BEGIN { FS = " -> " } ; { print $2 }')
+		if [ -z "$new_filename" ]
+		then 
+			xfce4-terminal -e "nvim $NOTES_FOLDER/$old_filename"
+		else
+			xfce4-terminal -e "nvim $new_filename"
+		fi
+	fi
+fi

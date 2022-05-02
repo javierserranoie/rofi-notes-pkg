@@ -1,0 +1,11 @@
+#!/bin/bash
+
+sudo rm -rf pkg/ src/ *tar.*
+
+tar -czf rofi-notes-1.0.tar.gz rofi-notes-1.0
+
+sha_sums=$(makepkg -g)
+
+sed -i "s/sha256sums=(.*)/$sha_sums/g" PKGBUILD
+
+makepkg

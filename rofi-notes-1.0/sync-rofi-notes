@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -ex
+
+REMOTE_PATH=</remote/path>/notes/
+LOCAL_PATH=</local/path>/notes/
+
+inotifywait -mr -e close_write $LOCAL_PATH |
+while read
+do
+       rsync -a $LOCAL_PATH $REMOTE_PATH
+done
+
